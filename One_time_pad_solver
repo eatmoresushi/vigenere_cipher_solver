@@ -1,0 +1,43 @@
+# solving modular arithmetic one time pad cipher with re-used keys
+
+LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+# the cipher text given
+C1 = 'LpaGbbfctNiPvwdbjnPuqolhhtygWhEuafjlirfPxxl'.upper()
+C2 = 'WdafvnbcDymxeeulWOtpoofnilwngLhblUfecvqAxs'.upper()
+C3 = 'UijMltDjeumxUnbiKstvdrVhcoDasUlrvDypegublg'.upper()
+C4 = 'LpaAlrhGmjikgjdmLlcsnnYmIsoPcglaGtKeQcemiu'.upper()
+C5 = 'LpaDohqcOzVbglebjPdTnoTzbyRbuwGftflTliPiqp'.upper()
+
+"""
+modular arithmetic was used
+Encryption: (M + key) mod 26 = C
+Decryption: (C - key) mod 26 = M
+"""
+
+# the crib word
+crib = 'THE'
+
+# or can use a loop
+# for i in range(0, len(C1)-len(crib)):
+i = 0
+C1_substring = C1[i:i + len(crib)]
+C2_substring = C2[i:i + len(crib)]
+C3_substring = C3[i:i + len(crib)]
+C4_substring = C4[i:i + len(crib)]
+C5_substring = C5[i:i + len(crib)]
+presumed_key = []
+decode_text = []
+for ss, cb in zip(C1_substring, crib):
+    """Presumed Key = (C - M) mod 26"""
+    ss_pos = LETTERS.find(ss)
+    cb_pos = LETTERS.find(cb)
+    presumed_key.append((ss_pos - cb_pos) % len(LETTERS))
+print(''.join(LETTERS[i] for i in presumed_key))
+
+"""Plaintext M = (C - key) mod 26"""
+for ss, pk in zip(C5_substring, presumed_key):
+    decode_text_pos = (LETTERS.find(ss) - pk) % len(LETTERS)
+    decode_text.append(LETTERS[decode_text_pos])
+print(''.join(decode_text))
+print("--------")
